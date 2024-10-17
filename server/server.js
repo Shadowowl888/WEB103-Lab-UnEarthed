@@ -2,11 +2,13 @@ import express from "express";
 import "./config/dotenv.js";
 import { pool } from "./config/database.js";
 import giftsRouter from "./routes/gifts.js";
+import cors from "cors";
 
 const app = express();
 
-app.use("/public", express.static("./public"));
-app.use("/scripts", express.static("./public/scripts"));
+// app.use("/public", express.static("./public"));
+// app.use("/scripts", express.static("./public/scripts"));
+app.use(cors());
 app.use("/gifts", giftsRouter);
 
 app.get("/", (req, res) => {
@@ -15,8 +17,8 @@ app.get("/", (req, res) => {
 
 app.get("/test", async (req, res) => {
   try {
-    const result = await pool.query("SELECT * FROM gifts ORDER BY id ASC");
-    res.status(200).json(result.rows);
+    const results = await pool.query("SELECT * FROM gifts ORDER BY id ASC");
+    res.status(200).json(results.rows);
   } catch (err) {
     console.error("⚠️ Error fetching data", err);
     res.status(500).send("⚠️ Error fetching data");
